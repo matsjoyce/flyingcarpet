@@ -4,6 +4,7 @@ import flyingcarpet
 import sys
 import pathlib
 import potash
+import re
 from potash.qt3 import object_view, object_model, object_edit_widget, source_unlock_dialog, displays
 
 sys.path.insert(0, "/home/matthew/.local/share/tasksd/tasks/")
@@ -55,6 +56,10 @@ class TNSApp(flyingcarpet.App):
         add_action.triggered.connect(self.add_rss)
         self.toolbar.addAction(add_action)
 
+        add_action = QtWidgets.QAction(QtGui.QIcon.fromTheme("emblem-videos-symbolic"), "Add YouTube Channel", self)
+        add_action.triggered.connect(self.add_youtube)
+        self.toolbar.addAction(add_action)
+
         remove_action = QtWidgets.QAction(QtGui.QIcon.fromTheme("list-remove"), "Remove", self)
         remove_action.setShortcut("Ctrl+R")
         remove_action.triggered.connect(self.remove_feed)
@@ -75,6 +80,17 @@ class TNSApp(flyingcarpet.App):
         state = rss_feed_objs.RSSState(self.view.model().source)
         if not object_edit_widget.ObjectEditDialog.edit([state], self.view.model().displayed_headers(), self):
             state.destroy()
+
+    def add_youtube(self):
+        text, ok = QtWidgets.QInputDialog.getText(self, "Add YouTube Channel", "Channel URL:",
+                                                  QtWidgets.QLineEdit.Normal, "")
+        if not text or not ok:
+            return
+        channel_id, = re.match("https?://www.youtube.com/channel/(UC[A-Za-z0-9_-]+)$", text).groups()
+        state = rss_feed_objs.RSSState(self.view.model().source,
+                                       feed_url="https://www.youtube.com/feeds/videos.xml?channel_id=" + channel_id,
+                                       icon="/home/matthew/Pictures/Icons/youtube.svg")
+        state.source.commit()
 
     def remove_feed(self):
         for obj in self.view.selectedObjects():

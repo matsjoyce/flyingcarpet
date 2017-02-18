@@ -2,7 +2,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 import flyingcarpet
 import potash
-from potash.qt3 import object_view, object_model, object_edit_widget, source_unlock_dialog
+from potash.qt3 import object_view, object_model, object_edit_widget, source_unlock_dialog, displays
 
 
 class NotesApp(flyingcarpet.App):
@@ -21,7 +21,8 @@ class NotesApp(flyingcarpet.App):
         model.setHeaders([
             object_model.ObjectModelHeader("key"),
             object_model.ObjectModelHeader("summary"),
-            object_model.ObjectModelHeader("tags")
+            object_model.ObjectModelHeader("tags"),
+            object_model.ObjectModelHeader("description", display=displays.formatted_text.MarkdownDisplay())
             ])
         model.setFilter(type=potash.builtin_objects.Note)
 
@@ -47,10 +48,7 @@ class NotesApp(flyingcarpet.App):
 
     def add_note(self):
         note = potash.builtin_objects.Note(self.view.model().source)
-        if not object_edit_widget.ObjectEditDialog.edit([note],
-                                                        [object_model.ObjectModelHeader("summary"),
-                                                         object_model.ObjectModelHeader("tags"),
-                                                         object_model.ObjectModelHeader("description")], self):
+        if not object_edit_widget.ObjectEditDialog.edit([note], self.view.model().displayed_headers()[1:], self):
             note.destroy()
 
     def remove_note(self):

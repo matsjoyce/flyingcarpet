@@ -1,7 +1,5 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-from ..build import FileBuilder
-
 
 class AboutDialog(QtWidgets.QDialog):
     def __init__(self, app, parent=None):

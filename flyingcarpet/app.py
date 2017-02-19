@@ -13,6 +13,7 @@ class App(QtWidgets.QMainWindow):
     SUBCATEGORIES = set()
     ADD_PREFIX = True
     LAUNCHER_NAME = None
+    FILES = set()
 
     def __init__(self, with_toolbar=False, maximized=False):
         self.application = QtWidgets.QApplication(sys.argv)
@@ -70,7 +71,7 @@ class App(QtWidgets.QMainWindow):
         data.append(("Name", cls.NAME))
         data.append(("Generic name", cls.GENERIC_NAME))
         data.append(("Class name", cls.__name__))
-        data.append(("Load path", str(build.FileBuilder.APPS_DIR / cls.PATH)))
+        data.append(("Load path", str(cls.PATH)))
         if cls.DESCRIPTION:
             data.append(("Description", cls.DESCRIPTION))
         data.append(("Version", ".".join(map(str, cls.VERSION))))

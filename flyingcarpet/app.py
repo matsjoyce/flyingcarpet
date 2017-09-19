@@ -15,7 +15,7 @@ class App(QtWidgets.QMainWindow):
     LAUNCHER_NAME = None
     FILES = set()
 
-    def __init__(self, with_toolbar=False, maximized=False):
+    def __init__(self, with_toolbar=False, with_statusbar=False, maximized=False):
         self.application = QtWidgets.QApplication(sys.argv)
         super().__init__()
 
@@ -40,6 +40,10 @@ class App(QtWidgets.QMainWindow):
             self.toolbar.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
             self.toolbar.setFloatable(False)
             self.addToolBar(QtCore.Qt.TopToolBarArea, self.toolbar)
+
+        if with_statusbar:
+            self.statusbar = QtWidgets.QStatusBar(self)
+            self.setStatusBar(self.statusbar)
 
         if maximized:
             self.setWindowState(QtCore.Qt.WindowMaximized)

@@ -6,7 +6,7 @@ Usage:
 """
 
 
-import docopt
+import sys
 import logging
 import iridescence
 import pathlib
@@ -92,16 +92,29 @@ def install(fname, dryrun):
 
 
 def main():
-    args = docopt.docopt(__doc__)
     try:
-        if args["run"]:
-            run_app(args["<module>"], args["<name>"])
-        elif args["info"]:
-            if args["<name>"]:
-                info_app(args["<module>"], args["<name>"])
-            else:
-                info_module(args["<module>"] or APP_FILES_PATH)
-        elif args["install"]:
-            install(args["<path>"] or ".", args["--dryrun"])
+        if len(sys.argv) < 2:
+            print(__doc__)
+        elif sys.argv[1] == "run" and len(sys.argv) >= 4:
+            args = sys.argv[2:4]
+            sys.argv[0:3] = []
+            return run_app(*args)
+        elif sys.argv[1] == "info":
+            if len(sys.argv) == 2:
+                return info_module(APP_FILES_PATH)
+            elif len(sys.argv) == 3:
+                return info_module(sys.argv[2])
+            elif len(sys.argv) == 4:
+                return info_module(*sys.argv[2:4])
+        elif sys.argv[1] == "install":
+            dryrun = "--dryrun" in sys.argv
+            if dryrun:
+                sys.argv.remove("--dryrun")
+            if len(sys.argv) == 2:
+                return install(".", dryrun)
+            elif len(sys.argv) == 3:
+                return install(sys.argv[2], dryrun)
+        else:
+            print(__doc__)
     except Exception:
         logger.critical("Unhandled exception", exc_info=True)

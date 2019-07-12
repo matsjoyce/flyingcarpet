@@ -16,6 +16,8 @@ class App(QtWidgets.QMainWindow):
     FILES = set()
 
     def __init__(self, with_toolbar=False, with_statusbar=False, maximized=False):
+        QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps)
+        QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
         self.application = QtWidgets.QApplication(sys.argv)
         super().__init__()
 
@@ -33,6 +35,7 @@ class App(QtWidgets.QMainWindow):
         self.about_action = QtWidgets.QAction(self.icon, f"About {self.NAME}", self.help_menu)
         self.about_action.triggered.connect(self.on_about_action)
         self.help_menu.addAction(self.about_action)
+
 
         if with_toolbar:
             self.toolbar = QtWidgets.QToolBar(self)

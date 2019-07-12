@@ -41,7 +41,7 @@ def extract_apps(path):
         logger.debug(f"Loading successful, found {len(apps)} apps")
         return apps
     finally:
-        sys.path.pop(0)
+        sys.path.remove(str(path.parent))
 
 
 def find_apps(search_path, exact):
